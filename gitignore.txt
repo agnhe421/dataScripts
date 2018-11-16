@@ -1,3 +1,0 @@
-/convertDataToOpenSpaceFormat/
-/addLightTravelTimeToSignals/
-/convertRadecDataToOpenSpaceFormat/
