@@ -5,8 +5,11 @@ from collections import defaultdict
 name = ""
 hours = []
 names = []
+positions = {}
 data = []
 oneHourData = []
+
+
 with open('data/MRO-everyminute.dat') as f:
 	reader = csv.DictReader(f, fieldnames=['TimeStamp', 'AzUp', 'ElUp', 'RngUp', 'AzDn', 'ElDn', 'RngDn', 
 		'RAUp', 'DecUp', 'GeoRngUp', 'RADn', 'DecDn', 'GeoRngDn', 'ULT', 'RTLT_Up', 'XADop', 'DLT', 'RTLT_Dn', 'OneWayDop', 'TwoWayDop']) 
@@ -45,6 +48,7 @@ for i in range(0, len(hours)):
 		oneHourData.append(data[i])
 	else:
 		outputData = open(str("C:/Agnes/OpenSpace/sync/http/dsn_data/1/positioning/MRO/" + names[i])+'.json', 'w')
-		json.dump(oneHourData,outputData, indent=4)
+		positions["Positions"] = oneHourData
+		json.dump(positions,outputData, indent=4)
 		del oneHourData[:]
 
