@@ -34,6 +34,7 @@ with open('data/MRO-everyminute.dat') as f:
 		row['RAUp'] = float(row['RAUp'])
 		row['DecUp'] = float(row['DecUp'])
 		row['GeoRngUp'] = float(row['GeoRngUp'])
+		row['TimeStamp'] = row['TimeStamp'][0:14]
 		
 		name = row["TimeStamp"][0:11]
 		names.append(name)
