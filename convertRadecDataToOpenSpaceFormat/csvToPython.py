@@ -1,10 +1,9 @@
 import json
 import csv
 from collections import defaultdict
-
 columns = defaultdict(list)
-
-with open('data/VGR1-5years.dat') as f:
+name = ""
+with open('data/MRO-everyminute.dat') as f:
 	reader = csv.DictReader(f, fieldnames=['TimeStamp', 'AzUp', 'ElUp', 'RngUp', 'AzDn', 'ElDn', 'RngDn', 
 		'RAUp', 'DecUp', 'GeoRngUp', 'RADn', 'DecDn', 'GeoRngDn', 'ULT', 'RTLT_Up', 'XADop', 'DLT', 'RTLT_Dn', 'OneWayDop', 'TwoWayDop']) 
 	for row in reader:
@@ -14,9 +13,9 @@ with open('data/VGR1-5years.dat') as f:
 		del row['AzDn']
 		del row['ElDn']
 		del row['RngDn']
-		del row['RAUp']
-		del row['DecUp']
-		del row['GeoRngUp']
+		del row['RADn'] 
+		del row['DecDn']
+		del row['GeoRngDn']
 		del row['ULT']
 		del row['RTLT_Up']
 		del row['XADop']
@@ -24,11 +23,15 @@ with open('data/VGR1-5years.dat') as f:
 		del row['OneWayDop']
 		del row['TwoWayDop']
 
-		row['RADn'] = float(row['RADn'])
-		row['DecDn'] = float(row['DecDn'])
-		row['GeoRngDn'] = float(row['GeoRngDn'])
+		row['RAUp'] = float(row['RAUp'])
+		row['DecUp'] = float(row['DecUp'])
+		row['GeoRngUp'] = float(row['GeoRngUp'])
 		row['RTLT_Dn'] = float(row['RTLT_Dn'])
 		
-		outputData = open(str("parsed/" + row["TimeStamp"][0:11])+'.json', 'w')
+		name = row["TimeStamp"][0:14]
+		for char in name:
+			name = name.replace(":","-")
+
+		outputData = open(str("C:/Agnes/OpenSpace/sync/http/dsn_data/1/positioning/MRONEW/" + name)+'.json', 'w')
 		del row['TimeStamp']
 		json.dump(row,outputData, indent=4)
