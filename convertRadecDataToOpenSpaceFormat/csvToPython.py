@@ -1,8 +1,12 @@
 import json
 import csv
 from collections import defaultdict
-columns = defaultdict(list)
+
 name = ""
+hours = []
+names = []
+data = []
+oneHourData = []
 with open('data/MRO-everyminute.dat') as f:
 	reader = csv.DictReader(f, fieldnames=['TimeStamp', 'AzUp', 'ElUp', 'RngUp', 'AzDn', 'ElDn', 'RngDn', 
 		'RAUp', 'DecUp', 'GeoRngUp', 'RADn', 'DecDn', 'GeoRngDn', 'ULT', 'RTLT_Up', 'XADop', 'DLT', 'RTLT_Dn', 'OneWayDop', 'TwoWayDop']) 
@@ -22,16 +26,25 @@ with open('data/MRO-everyminute.dat') as f:
 		del row['DLT']
 		del row['OneWayDop']
 		del row['TwoWayDop']
+		del row['RTLT_Dn']
 
 		row['RAUp'] = float(row['RAUp'])
 		row['DecUp'] = float(row['DecUp'])
 		row['GeoRngUp'] = float(row['GeoRngUp'])
-		row['RTLT_Dn'] = float(row['RTLT_Dn'])
 		
-		name = row["TimeStamp"][0:14]
-		for char in name:
-			name = name.replace(":","-")
+		name = row["TimeStamp"][0:11]
+		names.append(name)
 
-		outputData = open(str("C:/Agnes/OpenSpace/sync/http/dsn_data/1/positioning/MRONEW/" + name)+'.json', 'w')
-		del row['TimeStamp']
-		json.dump(row,outputData, indent=4)
+		hour = row["TimeStamp"][9:11]
+		hours.append(int(hour))
+
+		data.append(row)
+
+for i in range(0, len(hours)):
+	if(i+1 < len(hours) and hours[i] == hours[i+1]):
+		oneHourData.append(data[i])
+	else:
+		outputData = open(str("C:/Agnes/OpenSpace/sync/http/dsn_data/1/positioning/MRO/" + names[i])+'.json', 'w')
+		json.dump(oneHourData,outputData, indent=4)
+		del oneHourData[:]
+
