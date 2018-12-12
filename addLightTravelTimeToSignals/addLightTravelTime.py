@@ -31,7 +31,7 @@ for path in pathlist:
 				del row['ULT']
 				del row['RTLT_Up']
 				del row['XADop']
-				del row['DLT']
+				del row['RTLT_Dn']
 				del row['OneWayDop']
 				del row['TwoWayDop']
 				del row['RADn']
@@ -44,12 +44,14 @@ for path in pathlist:
 					data = json.load(data_file)
 					signal = (data["Signals"])
 					
-					j =0
-					
-					for i in signal:
-						if(signal[j]["bot"][0:8] in row['TimeStamp'][0:8]): 
-							signal[j]["rtlt"] = row['RTLT_Dn']	
-							testSignal.append(signal[j])
+					for i in range(0, len(signal)):
+						if(signal[i]["bot"][0:8] in row['TimeStamp'][0:8]): 
+							if( signal[i]["projuser"] == "VGR1"):
+								signal[i]["DLT"] = row['DLT']	
+								testSignal.append(signal[i])
+							else:
+								testSignal.append(signal[i])
+
 					
 startIndex = 0;
 for j in range(0, len(testSignal)):
