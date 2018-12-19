@@ -94,14 +94,26 @@ for path in pathlist:
 		EOT[x] = str(DAYS[x] + "T" + EOT[x])
 		DISHES[x] = DISHES[x].replace("-", "")
 
-		dataObj =  {'facility': DISHES[x], 
-						'bot' : BOT[x], 
-		 				'eot' : EOT[x], 
-		 				'projuser' : SPACECRAFT[x],
-		 				'direction' : EQUIPMENT[x] } 
+		if(SPACECRAFT[x] == "VGR1" or SPACECRAFT[x] == "VGR2" or SPACECRAFT[x] == "MRO" or SPACECRAFT[x] == "STA"):
+			# if(SPACECRAFT[x] == "VGR1"):
+			# 	DLT = 7.12490578611277e+04
+			# if(SPACECRAFT[x] == "VGR2"):
+			# 	DLT = 5.88422616479651e+04
+			# if(SPACECRAFT[x] == "MRO"):
+			# 	DLT = 2.32423145836050e+02
+			# if(SPACECRAFT[x] == "STA"):
+			# 	DLT = 7.75907803636773e+02
+			DLT = 0
+			if(EQUIPMENT[x] != "None"):
+				dataObj =  {'facility': DISHES[x], 
+								'bot' : BOT[x], 
+				 				'eot' : EOT[x], 
+				 				'projuser' : SPACECRAFT[x],
+				 				'direction' : EQUIPMENT[x],
+				 				'DLT' : DLT } 
 
-		data.append(dataObj)
-		
+				data.append(dataObj)
+				
 
 		if(x+1 < len(DAYS) and DAYS[x] != DAYS[x+1]):
 				output["Signals"] = data
@@ -114,4 +126,4 @@ for path in pathlist:
 				outputFilename = open(str("parsed/" + DAYS[x])+  "T" + '.json', 'w')
 				json.dump(output, outputFilename, indent=4)
 				data.clear()
-				
+			
