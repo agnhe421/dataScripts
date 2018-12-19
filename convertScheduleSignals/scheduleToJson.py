@@ -13,6 +13,7 @@ def findYear(s):
     else:
     	return	True
 
+
 def findDirection(s):
 	#get equipmentlist to decide if uplink/downlink, then delete it
 	equipmentString = s.replace(";", "")
@@ -46,7 +47,7 @@ for path in pathlist:
 	# because path is object not string
 	path_in_str = str(path)
 	filename = path_in_str
-	print(path_in_str)
+	#print(path_in_str)
 
 	# with open(path_in_str) as data_file:    
 	# 	data = json.load(data_file)
@@ -68,13 +69,29 @@ for path in pathlist:
 	for x in range (0, len(lines)):
 		if findYear(lines[x]):
 			year = str("20" + lines[x][43:46].strip())
+			yearChange = str("20" + lines[x][55:58].strip())
+			newYear = False
+
+			if(lines[x][43:46].strip() != lines[x][55:58].strip()):
+				year = str("20" + lines[x][43:46].strip())
+				yearChange = str("20" + lines[x][55:58].strip())
+				newYear = True
+				#print(lines[x][55:58].strip())
 
 
 		if isData(lines[x]):
 			if(lines[x][72:75] == '1A1'):
 				WRKCAT.append(lines[x][72:75])
 				if(isNotEmpty(lines[x][0:4])):
-					DAYS.append(str( year + "-" + lines[x][0:4].strip()))
+					#DAYS.append(str( year + "-" + lines[x][0:4].strip()))
+					if(newYear == True):
+						if( lines[x][0:3].strip() == "36"):
+							DAYS.append(str( year + "-" + lines[x][0:4].strip()))
+						else: 
+							DAYS.append(str( yearChange + "-" + lines[x][0:4].strip()))
+					else: 
+						DAYS.append(str( year + "-" + lines[x][0:4].strip()))
+
 				if((lines[x][10:11]).isdigit()):
 						BOT.append(str(lines[x][10:12] + ":" + lines[x][12:14] ))
 				if((lines[x][15:16]).isdigit()):
