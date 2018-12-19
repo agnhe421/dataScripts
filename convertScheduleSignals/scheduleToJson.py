@@ -13,6 +13,30 @@ def findYear(s):
     else:
     	return	True
 
+def updateDay(s):
+	dayInt = int(s)
+	dayString =""
+
+	if(dayInt == 365):
+		dayString == "001"
+		
+	elif dayInt >= 100:
+		dayString = str(dayInt + 1)
+
+	elif dayInt >= 9 and dayInt < 100:
+		dayString = str("0" + str(dayInt + 1))
+	
+	elif (dayInt < 9):
+		dayString = str("00" + str(dayInt + 1))
+
+	return dayString
+
+def updateYear(year):
+	yearInt = int(year)
+	yearInt = yearInt + 1
+	yearString = str(yearInt)
+	return yearString
+
 
 def findDirection(s):
 	#get equipmentlist to decide if uplink/downlink, then delete it
@@ -44,13 +68,8 @@ def findDirection(s):
 directory_in_str = "C://Users//openspace//Agnes//convertToJSON//convertScheduleSignals//data"
 pathlist = Path(directory_in_str).glob('**/*.csv')
 for path in pathlist:
-	# because path is object not string
 	path_in_str = str(path)
 	filename = path_in_str
-	#print(path_in_str)
-
-	# with open(path_in_str) as data_file:    
-	# 	data = json.load(data_file)
 
 	DISHES = []
 	DAYS = []
@@ -59,6 +78,7 @@ for path in pathlist:
 	SPACECRAFT = []
 	WRKCAT = []
 	EQUIPMENT = []
+	DLT = 0
 
 	dataObj = {}
 	data = []
@@ -83,9 +103,9 @@ for path in pathlist:
 			if(lines[x][72:75] == '1A1'):
 				WRKCAT.append(lines[x][72:75])
 				if(isNotEmpty(lines[x][0:4])):
-					#DAYS.append(str( year + "-" + lines[x][0:4].strip()))
+					#Make sure we can handle new years in the same week
 					if(newYear == True):
-						if( lines[x][0:3].strip() == "36"):
+						if( lines[x][0:2].strip() == "3"):
 							DAYS.append(str( year + "-" + lines[x][0:4].strip()))
 						else: 
 							DAYS.append(str( yearChange + "-" + lines[x][0:4].strip()))
@@ -107,20 +127,23 @@ for path in pathlist:
 				
 
 	for x in range(0, len(DISHES)):
+		
+		if(int(EOT[x][0:2] + EOT[x][3:5]) < int(BOT[x][0:2] + BOT[x][3:5])):
+			day = updateDay(DAYS[x][5:8])
+			if(DAYS[x][5:8] == "365"):
+				year = updateYear(DAYS[x][0:4])
+				day = "001"
+				print(day)
+				EOT[x] = str(year + '-' + day + "T"  + EOT[x])
+			else:
+				EOT[x] = str(DAYS[x][0:5] + day + "T"  + EOT[x])
+		else: 
+			EOT[x] = str(DAYS[x] + "T" + EOT[x])
+
 		BOT[x] = str(DAYS[x] + "T" + BOT[x])
-		EOT[x] = str(DAYS[x] + "T" + EOT[x])
 		DISHES[x] = DISHES[x].replace("-", "")
 
 		if(SPACECRAFT[x] == "VGR1" or SPACECRAFT[x] == "VGR2" or SPACECRAFT[x] == "MRO" or SPACECRAFT[x] == "STA"):
-			# if(SPACECRAFT[x] == "VGR1"):
-			# 	DLT = 7.12490578611277e+04
-			# if(SPACECRAFT[x] == "VGR2"):
-			# 	DLT = 5.88422616479651e+04
-			# if(SPACECRAFT[x] == "MRO"):
-			# 	DLT = 2.32423145836050e+02
-			# if(SPACECRAFT[x] == "STA"):
-			# 	DLT = 7.75907803636773e+02
-			DLT = 0
 			if(EQUIPMENT[x] != "None"):
 				dataObj =  {'facility': DISHES[x], 
 								'bot' : BOT[x], 
@@ -141,6 +164,6 @@ for path in pathlist:
 		elif(x == len(DAYS) -1):
 				output["Signals"] = data
 				outputFilename = open(str("parsed/" + DAYS[x])+  "T" + '.json', 'w')
-				json.dump(output, outputFilename, indent=4)
+				json.dump(output, outputFilename, indent=4)	
 				data.clear()
 			
