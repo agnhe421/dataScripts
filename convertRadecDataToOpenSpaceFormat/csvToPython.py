@@ -1,8 +1,7 @@
 import csv
 import json
+import os
 from collections import defaultdict
-from pathlib import Path
-
 
 localPath = "C:/Users/openspace/Agnes/convertToJSON/convertRadecDataToOpenSpaceFormat/"
 generatedDataDir = "parsed/"
@@ -15,10 +14,9 @@ dataExtension = ".dat"
 nameFormat = ""
 hours = []
 nameFormatList = []
-positions = {}
+positionsDictionary = {}
 data = []
 oneHourData = []
-
 
 dataPath = dataDir + spacecraftName + dataExtension
 
@@ -53,23 +51,58 @@ with open(dataPath) as f:
 		#Create our filename from the timestamp
 		nameFormat = row["TimeStamp"][0:11]
 		nameFormatList.append(nameFormat)
-		#print(name)
-		hour = row["TimeStamp"][9:11]
-		hours.append(int(hour))
 
 		data.append(row)
 
+firstIndexInNewFile = 0
 for i in range(0, len(data)):
-	if(i+1 < len(nameFormatList) and nameFormatList[i] == nameFormatList[i+1]):
+
+	# append the very first index to file
+	if i == firstIndexInNewFile :
 		oneHourData.append(data[i])
+
+	# Compare the Format: YYYY-DDDTHH with the format of the next index in the data
+	if(i+1 < len(nameFormatList) and nameFormatList[i] == nameFormatList[i+1]):
+		oneHourData.append(data[i+1])
+	#only dump to file if there is data for that particular hour
 	elif (len(oneHourData) > 0):
 
-		fileNameString = str( localPath + generatedDataDir + spacecraftName + "/" + names[i] + generatedExtension )
-		my_file = Path(fileNameString)
-		if my_file.is_file():
-			#print("File already exists for" + fileNameString)
+		fileNameString = str( localPath + generatedDataDir + spacecraftName + "/" + nameFormatList[i] + generatedExtension )
 
-		outputData = open(fileNameString, 'w')
-		positions["Positions"] = oneHourData
-		json.dump(positions,outputData, indent=4)
+		#Creates the file or open it for appending
+		outputDataFile = open(fileNameString, 'a')
+
+		# if file is NOT empty we have to open it and append the data that it does not have
+		# TODO: make sure the appended data is sorted according to timestamp
+		if not os.stat(fileNameString).st_size == 0 :
+			#print("NOT EMPTY: " + fileNameString)
+			outputDataFile.close()
+			#read the previously written data into json objects
+			with open(fileNameString, "r") as json_file:  
+				usedData = json.load(json_file)
+				tempData = []
+				for testIdx in range(0, len(oneHourData)):
+
+					shouldBeAppended = True
+					for p in range(0, len(usedData['Positions']))	:
+						# don't append duplicated data
+						if (oneHourData[testIdx]["TimeStamp"] == usedData['Positions'][p]):
+							shouldBeAppended = False
+
+					if(shouldBeAppended):
+							tempData.append(oneHourData[testIdx])
+
+			oneHourData.clear()
+			oneHourData = tempData
+			json_file.close()
+			outputDataFile = open(fileNameString , 'w')
+
+		#update the index for the following file
+		firstIndexInNewFile = firstIndexInNewFile + len(oneHourData)
+		positionsDictionary["Positions"] = oneHourData
+		#write to json file
+		json.dump(positionsDictionary,outputDataFile, indent=4)
 		del oneHourData[:]
+
+
+
