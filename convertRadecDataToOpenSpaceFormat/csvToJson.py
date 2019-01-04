@@ -6,7 +6,7 @@ from collections import defaultdict
 localPath = "C:/Users/openspace/Agnes/convertToJSON/convertRadecDataToOpenSpaceFormat/"
 generatedDataDir = "parsed/"
 generatedExtension = ".json"
-spacecraftName = "VGR2"
+spacecraftName = "NHPC"
 dataDir = "data/"
 dataExtension = ".dat"
 
@@ -17,6 +17,7 @@ nameFormatList = []
 positionsDictionary = {}
 data = []
 oneHourData = []
+times = []
 
 dataPath = dataDir + spacecraftName + dataExtension
 
@@ -52,10 +53,17 @@ with open(dataPath) as f:
 		nameFormat = row["TimeStamp"][0:11]
 		nameFormatList.append(nameFormat)
 
+		time = row["TimeStamp"]
+		times.append(time)
+
 		data.append(row)
 
 firstIndexInNewFile = 0
 for i in range(0, len(data)):
+
+	if (i+1 < len(times) and times[i] == times[i+1]):
+		firstIndexInNewFile = firstIndexInNewFile+1
+		continue
 
 	# append the very first index to file
 	if i == firstIndexInNewFile :
@@ -64,9 +72,9 @@ for i in range(0, len(data)):
 	# Compare the Format: YYYY-DDDTHH with the format of the next index in the data
 	if(i+1 < len(nameFormatList) and nameFormatList[i] == nameFormatList[i+1]):
 		oneHourData.append(data[i+1])
+
 	#only dump to file if there is data for that particular hour
 	elif (len(oneHourData) > 0):
-
 		fileNameString = str( localPath + generatedDataDir + spacecraftName + "/" + nameFormatList[i] + generatedExtension )
 
 		#Creates the file or open it for appending
@@ -99,8 +107,10 @@ for i in range(0, len(data)):
 
 		#update the index for the following file
 		firstIndexInNewFile = firstIndexInNewFile + len(oneHourData)
+
 		positionsDictionary["Positions"] = oneHourData
 		#write to json file
+		print("working on:  " + fileNameString[85:95])
 		json.dump(positionsDictionary,outputDataFile, indent=4)
 		del oneHourData[:]
 
