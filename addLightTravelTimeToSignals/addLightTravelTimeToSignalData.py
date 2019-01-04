@@ -5,8 +5,7 @@ from pathlib import Path
 #The local path where the script and data folders are located
 localPath = "C://Users//openspace//Agnes//convertToJSON//addLightTravelTimeToSignals"
 # A list of all the spacecrafts that we have positioning data for
-spacecraftList = ["CAS", "CHDR", "DAWN", "GAIA", "JNO", "KEPL", "MRO", "NHPC", "SOHO", "STF", "THC",
-"WIND", "STA", "STB", "THB", "VGR1", "VGR2"]
+spacecraftList = ["NHPC"]
 # ---------------------------------------------------------------------------------#
 #The dates for the signals stored in a vector
 signalDates  = []
@@ -24,7 +23,7 @@ fileExtensionRadec = '.json'
 
 
 pathlistSignal = Path(signalDir).glob('**/*'+fileExtensionSignal)
-pathlistRadecData = Path(radecDir).glob('**/*'+fileExtensionRadec)
+#pathlistRadecData = Path(radecDir).glob('**/*'+fileExtensionRadec)
 
 #print(pathlistRadecData)
 
@@ -50,10 +49,11 @@ for currentSignalDate in range (0, len(signalDates)):
 					radecDataFolder = radecDir + spacecraft + "//"
 					radecPathList = Path(radecDataFolder).glob('**/*'+fileExtensionRadec)
 					foundData = False
+					firstLightTravelTimeInFile = 0
 					for radecFilePath in radecPathList:
+						defaultPath = radecFilePath
 					    # because path is object not string
 						pathStr = str(radecFilePath)
-
 						if(pathStr.find(timestampSignal) != -1):
 							foundData = True
 							#print("For time: " + timestampSignal + "and spacecraft: " + spacecraft)
@@ -64,11 +64,20 @@ for currentSignalDate in range (0, len(signalDates)):
 								firstLightTravelTimeInFile = radecPositionData["Positions"][0]["DLT"]
 								#print(firstLightTravelTimeInFile)
 							break#break for loop when we get a match for the same day
+
+
 					if foundData == True:
 						print("Found lighttravelTime: "+ str(firstLightTravelTimeInFile) +", SignalTime: " + timestampSignal + ", Spacecraft: " + spacecraft)
 						print("From file: " + pathStr)
-						signalData["Signals"][currentSignal]["DLT"] =  str(firstLightTravelTimeInFile)
+						signalData["Signals"][currentSignal]["DLT"] =  float(firstLightTravelTimeInFile)
 					#break #if statement
+					else:
+						with open(defaultPath, 'r+') as spacecraftFile:
+								radecPositionData = json.load(spacecraftFile)
+								firstLightTravelTimeInFile = radecPositionData["Positions"][0]["DLT"]
+						print("Default DLT from path: " + str(defaultPath) + " DLT = " +  str(firstLightTravelTimeInFile))
+						signalData["Signals"][currentSignal]["DLT"] =  float(firstLightTravelTimeInFile)
+
 
 		signalFile.seek(0)
 		json.dump(signalData, signalFile, indent = 4)
