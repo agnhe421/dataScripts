@@ -25,18 +25,20 @@ for i in range (0, len(signalDates)):
  																		'RAUp', 'DecUp', 'GeoRngUp', 'RADn', 'DecDn', 'GeoRngDn', 'ULT', 'RTLT_Up', 'XADop', 'DLT', 'RTLT_Dn', 'OneWayDop', 'TwoWayDop']) 
  					
 					for row in 	positionData:
-						if(signalData["Signals"][j]["bot"][0:10] == row["TimeStamp"][0:10]):
-							print("found for " + signalData["Signals"][j]["bot"][0:10] + " in " + row["TimeStamp"][0:11] + " and " + signalData["Signals"][j]["projuser"] + ' ------ ' + row["DLT"] )
+						if(signalData["Signals"][j]["bot"][0:11] == row["TimeStamp"][0:11]):
+							print("found for " + signalData["Signals"][j]["bot"][0:11] + " in " + row["TimeStamp"][0:11] + " and " + signalData["Signals"][j]["projuser"] + ' ------ ' + row["DLT"] )
+							print("BEST ONE")
 							signalData["Signals"][j]["DLT"] =  row["DLT"]
 							break
 
 						elif (signalData["Signals"][j]["bot"][0:7] == row["TimeStamp"][0:7]):
 							print("found for " + signalData["Signals"][j]["bot"][0:8] + " in " + row["TimeStamp"][0:11] + " and " + signalData["Signals"][j]["projuser"] + ' ------ ' + row["DLT"] )
 							signalData["Signals"][j]["DLT"] =  row["DLT"]
+							print("MEDIUM ONE")
 							break
 
 						elif (signalData["Signals"][j]["bot"][0:2] == row["TimeStamp"][0:2]):
-							print("found for " + signalData["Signals"][j]["bot"][0:2] + " in " + row["TimeStamp"][0:11] + " and " + signalData["Signals"][j]["projuser"] + ' ------ ' + row["DLT"] )
+							print("found for " + signalData["Signals"][j]["bot"][0:4] + " in " + row["TimeStamp"][0:11] + " and " + signalData["Signals"][j]["projuser"] + ' ------ ' + row["DLT"] )
 							signalData["Signals"][j]["DLT"] =  row["DLT"]
 							break
 		f.seek(0)

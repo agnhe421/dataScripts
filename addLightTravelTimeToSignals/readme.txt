@@ -3,10 +3,10 @@ This is a guideline to adding the light travel time from one data to another.
 /***************************************************************************/
 
 step 1. Add all of the signal data to the folder called signalData
-step 2. Add all of the ra/dec data to the folder called radecData
-step 3. Make sure the radec data is named as the spacecraft identifier in the signal data. (3 letters)
-step 4. Run the script. 
-step 5. The signal data should be updated, and there should be an extra line for each signal, called "DLT".
+step 2. Add all of the ra/dec data (json) to the folder called radecData
+step 3. Make sure the radec data folder is named as the spacecraft identifier in the signal data. 
+step 4. Run the script (addLightTravelTimeToSignalData.py). 
+step 5. The signal data should be updated with the closest match in time for DLT.
 
 /**************************************************************************/
 This is how the data should look like when used in open space 

@@ -6,8 +6,8 @@ from collections import defaultdict
 localPath = "C:/Users/openspace/Agnes/convertToJSON/convertRadecDataToOpenSpaceFormat/"
 generatedDataDir = "parsed/"
 generatedExtension = ".json"
-spacecraftName = "NHPC"
-dataDir = "data/"
+spacecraftName = "ACE"
+dataDir = "data/hourly/"
 dataExtension = ".dat"
 
 # Generated filename as date, Format: YYYY-DDDTHH
@@ -110,7 +110,7 @@ for i in range(0, len(data)):
 
 		positionsDictionary["Positions"] = oneHourData
 		#write to json file
-		print("working on:  " + fileNameString[85:95])
+		print("working on:  " + fileNameString[84:95])
 		json.dump(positionsDictionary,outputDataFile, indent=4)
 		del oneHourData[:]
 

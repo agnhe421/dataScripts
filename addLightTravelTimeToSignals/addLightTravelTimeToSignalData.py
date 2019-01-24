@@ -5,7 +5,13 @@ from pathlib import Path
 #The local path where the script and data folders are located
 localPath = "C://Users//openspace//Agnes//convertToJSON//addLightTravelTimeToSignals"
 # A list of all the spacecrafts that we have positioning data for
-spacecraftList = ["NHPC"]
+# spacecraftList = ["VGR1","NHPC","VGR2","MRO","STA","STB","JNO","CAS","KEPL","GAIA","CHDR",
+# "THB","THC","DAWN","SPF","WIND","SOHO","GNS","HYB2","ICE","MSGR","TGO","TESS", "GTL", "MCOA",
+# "MCOB", "MER1", "MSL", "NSYT", "ORX", "PLC", "ROSE", "SPP", "TD10", "TD12", "TD13", "TDR3", 
+# "TDR7", "TDR5", "TDR9", "VEX", "XXM", "IMAG", "CLU1", "CLU2", "CLU3", "CLU4", "MMS1", "MMS2", 
+# "MMS3", "MMS4", "PRCN", "TERR"]
+
+spacecraftList = ["MRO"]
 # ---------------------------------------------------------------------------------#
 #The dates for the signals stored in a vector
 signalDates  = []
@@ -20,7 +26,6 @@ timeStrLength = 9
 
 #the date of radec file has the format 'YYYY-DDDTHH.json'
 fileExtensionRadec = '.json'
-
 
 pathlistSignal = Path(signalDir).glob('**/*'+fileExtensionSignal)
 #pathlistRadecData = Path(radecDir).glob('**/*'+fileExtensionRadec)

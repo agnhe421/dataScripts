@@ -103,7 +103,7 @@ for path in pathlist:
 			if(lines[x][72:75] == '1A1'):
 				WRKCAT.append(lines[x][72:75])
 				if(isNotEmpty(lines[x][0:4])):
-					#Make sure we can handle new years in the same week
+					#Make sure we can handle new years 
 					if(newYear == True):
 						if( lines[x][0:2].strip() == "3"):
 							DAYS.append(str( year + "-" + lines[x][0:4].strip()))
@@ -128,12 +128,14 @@ for path in pathlist:
 
 	for x in range(0, len(DISHES)):
 		
+		#If the transmission goes past midnight, we need to update the day befor adding the "end of transmission" to the data 
 		if(int(EOT[x][0:2] + EOT[x][3:5]) < int(BOT[x][0:2] + BOT[x][3:5])):
 			day = updateDay(DAYS[x][5:8])
+			#If it is also the end of the year...
 			if(DAYS[x][5:8] == "365"):
 				year = updateYear(DAYS[x][0:4])
 				day = "001"
-				print(day)
+				#print(day)
 				EOT[x] = str(year + '-' + day + "T"  + EOT[x])
 			else:
 				EOT[x] = str(DAYS[x][0:5] + day + "T"  + EOT[x])
@@ -143,18 +145,29 @@ for path in pathlist:
 		BOT[x] = str(DAYS[x] + "T" + BOT[x])
 		DISHES[x] = DISHES[x].replace("-", "")
 
-		if(SPACECRAFT[x] == "VGR1" or SPACECRAFT[x] == "VGR2" or SPACECRAFT[x] == "MRO" or SPACECRAFT[x] == "STA"):
-			if(EQUIPMENT[x] != "None"):
-				dataObj =  {'facility': DISHES[x], 
-								'bot' : BOT[x], 
-				 				'eot' : EOT[x], 
-				 				'projuser' : SPACECRAFT[x],
-				 				'direction' : EQUIPMENT[x],
-				 				'DLT' : DLT } 
+		#Specify which spacecrafts to use
+		if(SPACECRAFT[x] == "VGR1" or SPACECRAFT[x] == "VGR2" or SPACECRAFT[x] == "MRO" or SPACECRAFT[x] == "STA" or SPACECRAFT[x] == "STB" 
+			or SPACECRAFT[x] == "JNO" or SPACECRAFT[x] == "CAS" or SPACECRAFT[x] == "KEPL" or SPACECRAFT[x] == "GAIA" or SPACECRAFT[x] == "CHDR" or SPACECRAFT[x] == "NHPC"
+			or SPACECRAFT[x] == "THB" or SPACECRAFT[x] == "THC"  or SPACECRAFT[x] == "DAWN"  or SPACECRAFT[x] == "SPF"  or SPACECRAFT[x] == "WIND"  or SPACECRAFT[x] == "SOHO"
+			or SPACECRAFT[x] == "GNS" or SPACECRAFT[x] == "HYB2" or SPACECRAFT[x] == "ICE" or SPACECRAFT[x] == "MSGR" or SPACECRAFT[x] == "TGO" or SPACECRAFT[x] == "TESS"
+			or SPACECRAFT[x] == "GTL" or SPACECRAFT[x] == "MCOA" or SPACECRAFT[x] == "MCOB" or SPACECRAFT[x] == "MER1" or SPACECRAFT[x] == "MSL" or SPACECRAFT[x] == "NSYT"
+			or SPACECRAFT[x] == "ORX" or SPACECRAFT[x] == "ORX" or SPACECRAFT[x] == "PLC" or SPACECRAFT[x] == "ROSE" or SPACECRAFT[x] == "SPP" or SPACECRAFT[x] == "TD10"
+			or SPACECRAFT[x] == "TD12" or SPACECRAFT[x] == "TD13" or SPACECRAFT[x] == "TDR3" or SPACECRAFT[x] == "TDR5" or SPACECRAFT[x] == "TDR9" or SPACECRAFT[x] == "VEX"
+			or SPACECRAFT[x] == "XMM" or SPACECRAFT[x] == "IMAG" or SPACECRAFT[x] == "CLU1" or SPACECRAFT[x] == "CLU2" or SPACECRAFT[x] == "CLU3" or SPACECRAFT[x] == "CLU4"
+			or SPACECRAFT[x] == "MMS1"or SPACECRAFT[x] == "MMS2" or SPACECRAFT[x] == "MMS3" or SPACECRAFT[x] == "MMS4" or SPACECRAFT[x] == "TERR" or SPACECRAFT[x] == "PRCN"):
+		
+			if(DISHES[x] != "DSS84" and DISHES[x] != "DSS74" and DISHES[x] != "DSS48" and DISHES[x] != "DSS95"):
+				if(EQUIPMENT[x] != "None"):
+					dataObj =  {'facility': DISHES[x], 
+									'bot' : BOT[x], 
+					 				'eot' : EOT[x], 
+					 				'projuser' : SPACECRAFT[x],
+					 				'direction' : EQUIPMENT[x],
+					 				'DLT' : DLT } 
 
-				data.append(dataObj)
-				
-
+					data.append(dataObj)
+					
+		#Dump everything to json files depending on the day the signals starts transmitting 
 		if(x+1 < len(DAYS) and DAYS[x] != DAYS[x+1]):
 				output["Signals"] = data
 				outputFilename = open(str("parsed/" + DAYS[x])+ "T" + '.json', 'w')
@@ -166,4 +179,12 @@ for path in pathlist:
 				outputFilename = open(str("parsed/" + DAYS[x])+  "T" + '.json', 'w')
 				json.dump(output, outputFilename, indent=4)	
 				data.clear()
-			
+	
+	#FIND ALL DISHES		
+		# with open("dishes.txt", "r+") as file:
+		#     for line in file:
+		#         if DISHES[x] in line:
+		#            break
+		#     else:
+		#         print(DISHES[x])
+		#         file.write(str(DISHES[x] +"\n")) # append missing data
