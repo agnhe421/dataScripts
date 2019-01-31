@@ -154,7 +154,9 @@ for path in pathlist:
 			or SPACECRAFT[x] == "ORX" or SPACECRAFT[x] == "ORX" or SPACECRAFT[x] == "PLC" or SPACECRAFT[x] == "ROSE" or SPACECRAFT[x] == "SPP" or SPACECRAFT[x] == "TD10"
 			or SPACECRAFT[x] == "TD12" or SPACECRAFT[x] == "TD13" or SPACECRAFT[x] == "TDR3" or SPACECRAFT[x] == "TDR5" or SPACECRAFT[x] == "TDR9" or SPACECRAFT[x] == "VEX"
 			or SPACECRAFT[x] == "XMM" or SPACECRAFT[x] == "IMAG" or SPACECRAFT[x] == "CLU1" or SPACECRAFT[x] == "CLU2" or SPACECRAFT[x] == "CLU3" or SPACECRAFT[x] == "CLU4"
-			or SPACECRAFT[x] == "MMS1"or SPACECRAFT[x] == "MMS2" or SPACECRAFT[x] == "MMS3" or SPACECRAFT[x] == "MMS4" or SPACECRAFT[x] == "TERR" or SPACECRAFT[x] == "PRCN"):
+			or SPACECRAFT[x] == "MMS1"or SPACECRAFT[x] == "MMS2" or SPACECRAFT[x] == "MMS3" or SPACECRAFT[x] == "MMS4" or SPACECRAFT[x] == "TERR" or SPACECRAFT[x] == "PRCN"
+			or SPACECRAFT[x] == "ACE" or SPACECRAFT[x] == "BEPI" or SPACECRAFT[x] == "CH2O" or SPACECRAFT[x] == "JWST" or SPACECRAFT[x] == "LADE" or SPACECRAFT[x] == "MVN"
+			or SPACECRAFT[x] == "ULYS" or SPACECRAFT[x] == "SPIL" or SPACECRAFT[x] == "TD11" or SPACECRAFT[x] == "LRO" or SPACECRAFT[x] == "TDR6" or SPACECRAFT[x] == "TDR7"):
 		
 			if(DISHES[x] != "DSS84" and DISHES[x] != "DSS74" and DISHES[x] != "DSS48" and DISHES[x] != "DSS95"):
 				if(EQUIPMENT[x] != "None"):
