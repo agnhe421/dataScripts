@@ -6,8 +6,9 @@ to a format that will work in OpenSpace running the DSN module.
 step 1. This is done for each spacecraft seperatly
 step 2. Make sure you have the proper data to your localPath
 step 3. Make sure you have the porpoer spacecraft selected for "spacecraftName"
-step 4. Run the script csvToJson.py 
-step 5. Check that the folder specified has been updated with the parsed data.
+step 4. Make sure there's an empty folder named like the spacecraft in the parsed folder.
+step 5. Run the script csvToJson.py 
+step 6. Check that the folder specified has been updated with the parsed data.
 
 /***************************************************************************/
 Double checks of data
